@@ -11,7 +11,6 @@ public class waterSpringsBody : MonoBehaviour
     private Mesh mesh;
     private List<Vector3> vertices;
     private List<int> triag;
-    private LineRenderer line;
     private List<Vector2> uv;
     private int count;
 
@@ -20,20 +19,25 @@ public class waterSpringsBody : MonoBehaviour
     public float k;
     public float d;
     public float Spread;
+    public int SpringCount;
+    public int width;
+    public float height = 3;
     void Start()
     {
         mesh = new Mesh();
         vertices = new List<Vector3>();
         triag = new List<int>();
         uv = new List<Vector2>();
-        line = GetComponent<LineRenderer>();
 
-        for (float i = transform.position.x; i < 10; i += 0.1f)
+        GameObject p = Instantiate(sprint, new Vector3(transform.position.x - width, transform.position.y, 0), Quaternion.identity);
+        p.transform.SetParent(transform);
+
+        for (int i = 0; i < SpringCount; i++)
         {
-            GameObject s = Instantiate(sprint, new Vector3(i, transform.position.y, 0), Quaternion.identity);
+            GameObject s = Instantiate(sprint, new Vector3(transform.GetChild(i).transform.position.x + 0.1f, transform.position.y, 0), Quaternion.identity);
             s.transform.SetParent(transform);
         }
-
+        
         springs = new GameObject[transform.childCount];
         leftDeltas = new float[transform.childCount];
         rightDeltas = new float[transform.childCount];
@@ -57,6 +61,8 @@ public class waterSpringsBody : MonoBehaviour
             leftDeltas[i] = 0;
             rightDeltas[i] = 0;
         }
+
+        StartCoroutine(randomSplash());
     }
 
 
@@ -92,13 +98,6 @@ public class waterSpringsBody : MonoBehaviour
             }
         }
 
-
-        for (int i = 0; i < springs.Length; i++)
-        {
-            line.SetPosition(i, springs[i].gameObject.transform.position);
-        }
-
-
         mesh.Clear();
         vertices.Clear();
         triag.Clear();
@@ -107,7 +106,7 @@ public class waterSpringsBody : MonoBehaviour
         for (int i = 0; i < springs.Length; i++)
         {
             vertices.Add(new Vector3(springs[i].transform.position.x, springs[i].transform.position.y, 0));
-            vertices.Add(new Vector3(springs[i].transform.position.x, -5, 0));
+            vertices.Add(new Vector3(springs[i].transform.position.x, height, 0));
         }
         
         triag.Add(2);
@@ -143,5 +142,14 @@ public class waterSpringsBody : MonoBehaviour
         //mesh.uv = uv.ToArray();
 
         WaterRenderer.GetComponent<MeshFilter>().mesh = mesh;
+    }
+
+
+    IEnumerator randomSplash()
+    {
+        yield return new WaitForSeconds(0.3f);
+        waterPhys wat = transform.GetChild(Random.Range(0, transform.childCount)).gameObject.GetComponent<waterPhys>();
+        wat.Splash(Random.Range(-0.04f, 0.04f));
+        StartCoroutine(randomSplash());
     }
 }

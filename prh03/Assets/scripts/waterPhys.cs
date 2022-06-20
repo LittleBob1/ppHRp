@@ -38,4 +38,10 @@ public class waterPhys : MonoBehaviour
         targetHeight = transform.position.y;
         velocity = 0;
     }
+
+    public void Splash(float velocityX)
+    {
+        this.velocity = velocityX;
+    }
+
 }
