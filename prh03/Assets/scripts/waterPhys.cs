@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class waterPhys : MonoBehaviour
+public class WaterPhys : MonoBehaviour
 {
 
     private float acceleration;
@@ -32,7 +32,7 @@ public class waterPhys : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y + velocity, 0);
     }
 
-    public void initialized()
+    public void Initialized()
     {
         height = transform.position.y;
         targetHeight = transform.position.y;

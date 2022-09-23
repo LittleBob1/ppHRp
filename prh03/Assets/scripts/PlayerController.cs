@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class controller : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Vector2 moveVec;
@@ -37,7 +37,7 @@ public class controller : MonoBehaviour
     {
         if (collision.gameObject.transform.tag == "spring")
         {
-            waterPhys wat = collision.gameObject.GetComponent<waterPhys>();
+            WaterPhys wat = collision.gameObject.GetComponent<WaterPhys>();
             if (Mathf.RoundToInt(rb.velocity.y) > 0)
             {
                 wat.Splash(-rb.velocity.y / kY);
